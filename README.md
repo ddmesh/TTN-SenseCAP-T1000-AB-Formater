@@ -1,4 +1,4 @@
-# TTN-SenseCAP-T1000-AB-Formater
+# TTN-SenseCAP-T1000-AB- Upload Payload Formater
 A upload formater for TheThinksNetwork and the tracker card SenseCAP-T1000-AB
 
 This script is a corrected and modified version of original SenseCAP formater which had some issues with
