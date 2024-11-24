@@ -46,6 +46,7 @@ function decodeUplink(input) {
 		if (message.type == "Longitude") { decoded.longitude = message.measurementValue; }
 		if (message.type == "Event Status") { decoded.eventStatus = message.measurementValue; }
 		if (message.motionId !== undefined) { decoded.motionCount = message.motionId; }
+		if (message.type == "Wi-Fi Scan") { decoded.access_points = message.measurementValue; }
 	}
 
 	decoded.messages = measurement;
@@ -777,14 +778,14 @@ function getSOSMode(str) {
 function getMacAndRssiObj(pair) {
 	var pairs = [];
 	var i;
-	var mac;
+	var bssid;
 	var rssi;
 	if (pair.length % 14 === 0) {
 		for (i = 0; i < pair.length; i += 14) {
-			mac = getMacAddress(pair.substring(i, i + 12));
-			if (mac) {
+			bssid = getMacAddress(pair.substring(i, i + 12));
+			if (bssid) {
 				rssi = getInt8RSSI(pair.substring(i + 12, i + 14));
-				pairs.push({ "mac": "mac", "rssi": rssi });
+				pairs.push({ "bssid": bssid, "rssi": rssi });
 			}
 		}
 	}
