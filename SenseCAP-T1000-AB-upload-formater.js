@@ -31,12 +31,16 @@ function decodeUplink(input) {
 		return { data: decoded };
 	}
 
+	// search errors, ignore invalid
 	for (i = 0; i < measurement.length; i += 1) {
 		message = measurement[i];
 		if (message.length > 0 && message.errorCode) {
 			decoded.err = message.errorCode;
 			decoded.errMessage = message.error;
 			return { data: decoded };
+		}
+		if (Number.isNaN(message.measurementValue)) {
+			message.measurementValue = "error: NaN";
 		}
 		decoded.timestamp = message.timestamp;
 		if (message.type == "Battery") { decoded.battery = message.measurementValue; }
@@ -451,12 +455,14 @@ function deserialize(dataId, dataValue) {
 					measurementValue: getSensorValue(dataValue.substring(20, 24))
 				});
 			}
-			measurementArray.push({
-				timestamp: collectTime,
-				measurementId: "3000",
-				type: "Battery",
-				measurementValue: getBattery(dataValue.substring(36, 38))
-			});
+			if (!Number.isNaN(getBattery(dataValue.substring(36, 38)))) {
+				measurementArray.push({
+					timestamp: collectTime,
+					measurementId: "3000",
+					type: "Battery",
+					measurementValue: getBattery(dataValue.substring(36, 38))
+				});
+			}
 			break;
 		case "1A":
 			collectTime = getUTCTimestamp(dataValue.substring(8, 16));
